@@ -1,4 +1,4 @@
-import { all, put, takeLatest, takeEvery } from "redux-saga/effects";
+import { all, put, takeLatest, takeEvery, select } from "redux-saga/effects";
 import TodoService from "../services/TodoService";
 import { TodoAction, TodoConstants } from "../actions/TodoActions";
 
@@ -23,6 +23,44 @@ function* watchCreate() {
   yield takeEvery(TodoConstants.TODO_CREATE, create);
 }
 
+function* remove({ id }) {
+  yield TodoService.remove(id);
+}
+
+function* watchRemove() {
+  yield takeEvery(TodoConstants.TODO_REMOVE, remove);
+}
+
+function* clear() {
+  const store = yield select();
+  const todoList = store.TodoReducer.filter((item) => {
+    if (item.isChecked) {
+      TodoService.remove(item.id);
+      return false;
+    }
+    return true;
+  });
+  yield put(TodoAction.listResponse(todoList));
+}
+
+function* watchClear() {
+  yield takeLatest(TodoConstants.TODO_CLEAR, clear);
+}
+
+function* update({ item }) {
+  yield TodoService.update(item);
+}
+
+function* watchUpdate() {
+  yield takeEvery(TodoConstants.TODO_UPDATE, update);
+}
+
 export default function* TodoSaga() {
-  yield all([watchListAll(), watchCreate()]);
+  yield all([
+    watchListAll(),
+    watchCreate(),
+    watchRemove(),
+    watchClear(),
+    watchUpdate(),
+  ]);
 }

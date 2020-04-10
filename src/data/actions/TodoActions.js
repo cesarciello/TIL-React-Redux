@@ -35,33 +35,20 @@ export const TodoAction = {
     };
   },
   update(item) {
-    return async (dispatch) => {
-      await TodoService.update(item);
-      dispatch({
-        type: TodoConstants.TODO_UPDATE,
-        item,
-      });
+    return {
+      type: TodoConstants.TODO_UPDATE,
+      item,
     };
   },
   remove(id) {
-    return async (dispatch) => {
-      await TodoService.remove(id);
-      dispatch({
-        type: TodoConstants.TODO_REMOVE,
-        id,
-      });
+    return {
+      type: TodoConstants.TODO_REMOVE,
+      id,
     };
   },
   clear() {
-    return async (dispatch, getStore) => {
-      getStore().TodoReducer.forEach((item) => {
-        if (item.isChecked) {
-          TodoService.remove(item.id);
-        }
-      });
-      dispatch({
-        type: TodoConstants.TODO_CLEAR,
-      });
+    return {
+      type: TodoConstants.TODO_CLEAR,
     };
   },
 };
