@@ -2,6 +2,7 @@ import TodoService from "../services/TodoService";
 
 export const TodoConstants = {
   TODO_LIST: "TODO_LIST",
+  TODO_LIST_RESPONSE: "TODO_LIST_RESPONSE",
   TODO_CREATE: "TODO_CREATE",
   TODO_UPDATE: "TODO_UPDATE",
   TODO_REMOVE: "TODO_REMOVE",

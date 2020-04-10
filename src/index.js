@@ -4,12 +4,17 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import { createStore, applyMiddleware } from "redux";
-import thunkMiddleware from 'redux-thunk';
 import { Provider } from "react-redux";
+import thunkMiddleware from 'redux-thunk';
 import RootReducer from "./data/reducers";
+import createSagaMiddware from 'redux-saga';
+import TodoSaga from './data/sagas/TodoSagas';
+import { createStore, applyMiddleware } from "redux";
 
-const store = createStore(RootReducer, applyMiddleware(thunkMiddleware));
+const sagaMiddware = createSagaMiddware();
+const store = createStore(RootReducer, applyMiddleware(thunkMiddleware, sagaMiddware));
+
+sagaMiddware.run(TodoSaga)
 
 ReactDOM.render(
   <React.StrictMode>

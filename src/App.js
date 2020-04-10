@@ -11,7 +11,6 @@ function App() {
 
   useEffect(() => {
     dispatch(TodoAction.list());
-    console.log(`here`);
   }, [dispatch]);
 
   return (
