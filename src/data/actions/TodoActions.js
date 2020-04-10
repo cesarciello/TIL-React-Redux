@@ -1,4 +1,7 @@
+import TodoService from "../services/TodoService";
+
 export const TodoConstants = {
+  TODO_LIST: "TODO_LIST",
   TODO_CREATE: "TODO_CREATE",
   TODO_UPDATE: "TODO_UPDATE",
   TODO_REMOVE: "TODO_REMOVE",
@@ -6,27 +9,55 @@ export const TodoConstants = {
 };
 
 export const TodoAction = {
+  list() {
+    return async (dispatch) => {
+      const todoList = await TodoService.list();
+      dispatch({
+        type: TodoConstants.TODO_LIST,
+        todoList,
+      });
+    };
+  },
   create(description) {
-    return {
-      type: TodoConstants.TODO_CREATE,
-      description,
+    return async (dispatch) => {
+      const newItem = await TodoService.create({
+        description,
+        isChecked: false,
+      });
+      dispatch({
+        type: TodoConstants.TODO_CREATE,
+        newItem,
+      });
     };
   },
   update(item) {
-    return {
-      type: TodoConstants.TODO_UPDATE,
-      item,
+    return async (dispatch) => {
+      await TodoService.update(item)
+      dispatch({
+        type: TodoConstants.TODO_UPDATE,
+        item,
+      });
     };
   },
   remove(id) {
-    return {
-      type: TodoConstants.TODO_REMOVE,
-      id,
+    return async (dispatch) => {
+      await TodoService.remove(id);
+      dispatch({
+        type: TodoConstants.TODO_REMOVE,
+        id,
+      });
     };
   },
   clear() {
-    return {
-      type: TodoConstants.TODO_CLEAR,
+    return async (dispatch, getStore) => {
+      getStore().TodoReducer.forEach((item) => {
+        if (item.isChecked) {
+          TodoService.remove(item.id);
+        }
+      });
+      dispatch({
+        type: TodoConstants.TODO_CLEAR,
+      });
     };
   },
 };
